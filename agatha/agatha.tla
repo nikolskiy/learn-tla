@@ -1,4 +1,8 @@
 ---- MODULE agatha ----
+(*
+This is work in progress.
+*)
+
 EXTENDS Integers, Sequences, TLC
 
 VARIABLES killer
