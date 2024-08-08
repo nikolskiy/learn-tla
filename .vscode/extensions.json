@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+         	"streetsidesoftware.code-spell-checker",
+		"eamodio.gitlens",
+		"alygin.vscode-tlaplus"
+	],
+	"unwantedRecommendations": [
+
+	]
+}

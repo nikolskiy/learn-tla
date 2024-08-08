@@ -1,0 +1,13 @@
+{
+    "cSpell.words": [
+        "tlaplus", "tla"
+    ],
+    "cSpell.enableFiletypes": [
+        "markdown"
+    ],
+    "files.trimFinalNewlines" : true,
+    "files.insertFinalNewline" : true,
+    "files.trimTrailingWhitespace": true,
+    "files.eol": "\n",
+
+}
