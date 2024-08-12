@@ -5,15 +5,27 @@ This is work in progress.
 
 EXTENDS Integers, Sequences, TLC
 
-VARIABLES killer
+VARIABLES killer, suspects, found
 
-Init == /\ killer = "None"
-        /\ found = FALSE
+Init ==
+    /\ killer = "None"
+    /\ found = FALSE
+    /\ suspects = {"Agatha", "Butler", "Charles"}
 
-FindKiller(person) ==
-    /\ found
-    /\ x' = x + 1
+FitsDescription(person) ==
+    /\ person = "Charles"
 
-Next == \E self \in {'a', 'b', 'c'}: FindKiller(self)
+PickSuspect ==
+    /\ killer' \in suspects
+    /\ suspects' = {s \in suspects: s # killer}
+
+CheckSuspect ==
+    /\ PickSuspect
+    /\ FitsDescription(killer)
+    /\ found' = TRUE
+
+KillerFound == killer # "Charles"
+
+Next == CheckSuspect
 
 ====
