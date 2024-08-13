@@ -18,14 +18,17 @@ FitsDescription(person) ==
 PickSuspect ==
     /\ killer' \in suspects
     /\ suspects' = {s \in suspects: s # killer}
+    /\ UNCHANGED found
 
 CheckSuspect ==
-    /\ PickSuspect
     /\ FitsDescription(killer)
     /\ found' = TRUE
+    /\ UNCHANGED << suspects, killer >>
 
-KillerFound == killer # "Charles"
+KillerNotFound == ~found
 
-Next == CheckSuspect
+Next ==
+    \/ PickSuspect
+    \/ CheckSuspect
 
 ====
