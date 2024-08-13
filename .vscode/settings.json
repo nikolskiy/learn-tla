@@ -3,7 +3,8 @@
         "tlaplus", "tla"
     ],
     "cSpell.enableFiletypes": [
-        "markdown"
+        "markdown",
+        "tlaplus"
     ],
     "files.trimFinalNewlines" : true,
     "files.insertFinalNewline" : true,
