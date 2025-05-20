@@ -10,5 +10,6 @@
     "files.insertFinalNewline" : true,
     "files.trimTrailingWhitespace": true,
     "files.eol": "\n",
+    "tlaplus.tlc.modelChecker.options": "-coverage 1",
 
 }
