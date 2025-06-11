@@ -1,9 +1,7 @@
 {
 	"recommendations": [
-        "streetsidesoftware.code-spell-checker",
-		"eamodio.gitlens"
-	],
-	"unwantedRecommendations": [
-
+		"eamodio.gitlens",
+		"streetsidesoftware.code-spell-checker",
+		"tlaplus.vscode-ide"
 	]
 }

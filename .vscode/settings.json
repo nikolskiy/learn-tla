@@ -1,15 +1,38 @@
 {
-    "cSpell.words": [
-        "tlaplus", "tla"
-    ],
-    "cSpell.enableFiletypes": [
-        "markdown",
-        "tlaplus"
-    ],
-    "files.trimFinalNewlines" : true,
-    "files.insertFinalNewline" : true,
-    "files.trimTrailingWhitespace": true,
-    "files.eol": "\n",
-    "tlaplus.tlc.modelChecker.options": "-coverage 1",
-
+	"files.autoSave": "onFocusChange",
+	"cSpell.enabled": true,
+	"cSpell.language": "en",
+	"cSpell.flagWords": [
+		"hte: the",
+		"teh: the",
+		"adn: and",
+		"recieve: receive",
+		"recieved: received",
+		"recieving: receiving"
+	],
+	"files.watcherExclude": {
+		"**/node_modules/**": true,
+		"**/bower_components/**": true,
+		"**/.git/**": true,
+		"**/.hg/**": true,
+		"**/.svn/**": true,
+		"**/.vscode-test/**": true
+	},
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+	"editor.formatOnSave": true,
+	"[json]": {
+		"editor.tabSize": 2
+	},
+	"[javascript]": {
+		"editor.tabSize": 2
+	},
+	"[typescript]": {
+		"editor.tabSize": 2
+	},
+	"terminal.integrated.defaultProfile.linux": "bash",
+	"editor.tabSize": 4,
+	"tlaplus.tlc.modelChecker.optionsPrompt": false,
+	"tlaplus.tlc.modelChecker.createOutFiles": false,
+	"tlaplus.tlc.modelChecker.options": "-coverage 1"
 }

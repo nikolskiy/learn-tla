@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive TLA+ Syntax Guide with AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Slate -->
+    <!-- Application Structure Plan: The SPA is designed for rapid reference. It uses a two-column layout: a sticky navigation sidebar on the left for direct topic access, and a main content area on the right. This structure was chosen over a simple linear document to allow users to immediately jump to the specific data structure or temporal logic concept they need without extensive scrolling. A search bar provides fast filtering. Gemini API features ("Explain Simply", "Generate Use Case", "Translate to English") are integrated to transform the static cheat sheet into an interactive learning tool, providing dynamic, AI-generated content to deepen user understanding. -->
+    <!-- Visualization & Content Choices: The source report is text-based. Key information is presented in styled tables and code blocks. Goal: Inform/Organize -> Presentation: HTML tables, `<pre>` blocks styled with Tailwind. Interaction: Live search, smooth-scroll navigation, and Gemini-powered buttons. The Gemini features dynamically generate text and code examples, which are displayed in a modal, offering a new layer of interactivity. The Sets vs. Sequences comparison remains in a clear table. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        .tla-code {
+            font-family: 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .searchable-content {
+            transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out;
+            overflow: hidden;
+        }
+
+        .hidden-content {
+            opacity: 0;
+            height: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .gemini-btn {
+            background-color: #f0f9ff;
+            color: #0c4a6e;
+            border: 1px solid #bae6fd;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .gemini-btn:hover {
+            background-color: #e0f2fe;
+            border-color: #7dd3fc;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside
+            class="w-full md:w-64 bg-white border-b md:border-r border-slate-200 p-4 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+            <h2 class="text-lg font-bold text-slate-900 mb-4">TLA+ Guide</h2>
+            <div class="mb-4">
+                <input type="text" id="searchInput" placeholder="Search operators..."
+                    class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+            <nav id="main-nav">
+                <ul class="space-y-2">
+                    <li><a href="#intro" class="block font-medium text-slate-600 hover:text-sky-600">Introduction</a>
+                    </li>
+                    <li><a href="#ai-assistant" class="block font-medium text-slate-600 hover:text-sky-600">✨ AI
+                            Assistant</a></li>
+                    <li><a href="#core" class="block font-medium text-slate-600 hover:text-sky-600">Core Concepts</a>
+                    </li>
+                    <li><a href="#sets" class="block font-medium text-slate-600 hover:text-sky-600">Sets</a></li>
+                    <li><a href="#sequences" class="block font-medium text-slate-600 hover:text-sky-600">Sequences</a>
+                    </li>
+                    <li><a href="#sets-vs-sequences" class="block font-medium text-slate-600 hover:text-sky-600">Sets
+                            vs. Sequences</a></li>
+                    <li><a href="#functions" class="block font-medium text-slate-600 hover:text-sky-600">Functions</a>
+                    </li>
+                    <li><a href="#records" class="block font-medium text-slate-600 hover:text-sky-600">Records</a></li>
+                    <li><a href="#temporal" class="block font-medium text-slate-600 hover:text-sky-600">Temporal
+                            Logic</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10">
+            <header class="mb-10">
+                <h1 class="text-4xl font-bold text-slate-900">Interactive TLA+ Syntax Guide</h1>
+                <p class="mt-2 text-lg text-slate-600">An interactive cheat sheet for TLA+ concepts, data structures,
+                    and temporal logic, now with AI-powered features.</p>
+            </header>
+
+            <section id="intro" class="mb-12 searchable-content">
+                <h2 class="text-3xl font-semibold text-slate-900 mb-4">1. Introduction to TLA+</h2>
+                <div class="space-y-4 text-slate-700">
+                    <p>TLA+ (Temporal Logic of Actions) is a high-level language designed for specifying and reasoning
+                        about complex systems... (content unchanged)</p>
+                </div>
+            </section>
+
+            <section id="ai-assistant" class="mb-12 searchable-content">
+                <h2 class="text-3xl font-semibold text-slate-900 mb-4">2. ✨ TLA+ to English Translator</h2>
+                <p class="mb-4 text-slate-700">Have a snippet of TLA+ code you don't understand? Paste it below and let
+                    the AI assistant explain what it does in plain English.</p>
+                <div class="p-4 bg-white rounded-lg border border-slate-200">
+                    <textarea id="tlaSnippet"
+                        class="w-full h-32 p-2 border border-slate-300 rounded-md tla-code bg-white"
+                        placeholder="Paste your TLA+ code here... e.g., Counter = 0 \/ Counter' = Counter + 1"></textarea>
+                    <button id="translateBtn" class="mt-2 gemini-btn">Translate to English</button>
+                </div>
+            </section>
+
+            <div id="sections-container">
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal for Gemini Response -->
+    <div id="geminiModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-11/12 md:w-1/2 max-w-2xl max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-2xl font-bold text-slate-900">AI Assistant</h3>
+                <button id="closeModal" class="text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="modalContent" class="overflow-y-auto">
+                <div id="loadingIndicator" class="text-center p-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto"></div>
+                    <p class="mt-4 text-slate-600">Generating response...</p>
+                </div>
+                <div id="modalResponse" class="hidden">
+                    <pre class="tla-code bg-slate-50 text-slate-800"
+                        style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sectionsData = [
+                {
+                    id: 'core',
+                    title: '3. Core TLA+ Concepts and Syntax',
+                    description: 'A TLA+ specification is typically organized into modules. Understanding the basic structural elements, declaration of parameters, definition of operators, and the role of standard libraries is foundational to writing TLA+ specifications.',
+                    content: `
+                 <div class="p-4 bg-white rounded-lg border border-slate-200">
+                        <h3 class="font-semibold text-lg text-slate-800 mb-2">Module Structure</h3>
+                        <pre class="tla-code">---- MODULE ModuleName ----
+EXTENDS Naturals, Sequences (* Import standard modules *)
+
+CONSTANTS C1, MaxRequests   (* Declare constant parameters *)
+VARIABLES v1, queue         (* Declare state variables *)
+
+(* Operator definitions, assumptions, etc. follow *)
+====</pre>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg border border-slate-200">
+                        <h3 class="font-semibold text-lg text-slate-800 mb-2">General Operators and Expressions</h3>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Logical:</strong> <code class="tla-code text-sm p-1">/\\</code> (and), <code class="tla-code text-sm p-1">\\/</code> (or), <code class="tla-code text-sm p-1">~</code> (not), <code class="tla-code text-sm p-1">=></code> (implies), <code class="tla-code text-sm p-1"><=></code> (iff)</li>
+                            <li><strong>Quantifiers:</strong> <code class="tla-code text-sm p-1">\\A x \\in S: P(x)</code> (forall), <code class="tla-code text-sm p-1">\\E x \\in S: P(x)</code> (exists)</li>
+                            <li><strong>Equality:</strong> <code class="tla-code text-sm p-1">=</code> (equals), <code class="tla-code text-sm p-1">/=</code> or <code class="tla-code text-sm p-1">#</code> (not equals)</li>
+                            <li><strong>Conditional:</strong> <code class="tla-code text-sm p-1">IF P THEN E1 ELSE E2</code></li>
+                            <li><strong>Let-In:</strong> <code class="tla-code text-sm p-1">LET defs IN expr</code> for local definitions.</li>
+                        </ul>
+                    </div>
+            `
+                },
+                {
+                    id: 'sets',
+                    title: '4. Sets',
+                    description: 'In TLA+, sets are unordered collections of unique elements, derived from ZF set theory. They are a fundamental data structure.',
+                    content: `<div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-4 font-semibold">Operator</th>
+                                <th class="p-4 font-semibold">Syntax</th>
+                                <th class="p-4 font-semibold">Description</th>
+                                <th class="p-4 font-semibold">Example</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4">Element of</td><td class="p-4"><code class="tla-code text-sm p-1">e \\in S</code></td><td class="p-4">Checks if \`e\` is in set \`S\`.</td><td class="p-4"><code class="tla-code text-sm p-1">1 \\in {1, 2}</code></td></tr>
+                            <tr><td class="p-4">Union</td><td class="p-4"><code class="tla-code text-sm p-1">S1 \\union S2</code></td><td class="p-4">Elements in \`S1\` or \`S2\`.</td><td class="p-4"><code class="tla-code text-sm p-1">{1} \\union {2}</code> is <code class="tla-code text-sm p-1">{1,2}</code></td></tr>
+                            <tr><td class="p-4">Intersection</td><td class="p-4"><code class="tla-code text-sm p-1">S1 \\intersect S2</code></td><td class="p-4">Elements in both \`S1\` and \`S2\`.</td><td class="p-4"><code class="tla-code text-sm p-1">{1,2} \\intersect {2,3}</code> is <code class="tla-code text-sm p-1">{2}</code></td></tr>
+                            <tr><td class="p-4">Difference</td><td class="p-4"><code class="tla-code text-sm p-1">S1 \\ S2</code></td><td class="p-4">Elements in \`S1\` but not \`S2\`.</td><td class="p-4"><code class="tla-code text-sm p-1">{1,2} \\ {2}</code> is <code class="tla-code text-sm p-1">{1}</code></td></tr>
+                            <tr><td class="p-4">Powerset</td><td class="p-4"><code class="tla-code text-sm p-1">SUBSET S</code></td><td class="p-4">The set of all subsets of \`S\`.</td><td class="p-4"><code class="tla-code text-sm p-1">SUBSET {1}</code> is <code class="tla-code text-sm p-1">{{}, {1}}</code></td></tr>
+                            <tr><td class="p-4">Cardinality</td><td class="p-4"><code class="tla-code text-sm p-1">Cardinality(S)</code></td><td class="p-4">Number of elements in finite set \`S\`.</td><td class="p-4"><code class="tla-code text-sm p-1">Cardinality({1,2})</code> is 2</td></tr>
+                            <tr><td class="p-4">Filter</td><td class="p-4"><code class="tla-code text-sm p-1">{x \\in S : P(x)}</code></td><td class="p-4">Set of \`x\` in \`S\` where \`P(x)\` is true.</td><td class="p-4"><code class="tla-code text-sm p-1">{x \\in 1..4 : x%2=0}</code> is <code class="tla-code text-sm p-1">{2,4}</code></td></tr>
+                            <tr><td class="p-4">Map</td><td class="p-4"><code class="tla-code text-sm p-1">{e(x) : x \\in S}</code></td><td class="p-4">Set of \`e(x)\` for each \`x\` in \`S\`.</td><td class="p-4"><code class="tla-code text-sm p-1">{x*x : x \\in {1,2}}</code> is <code class="tla-code text-sm p-1">{1,4}</code></td></tr>
+                            <tr><td class="p-4">Choose</td><td class="p-4"><code class="tla-code text-sm p-1">CHOOSE x \\in S : P(x)</code></td><td class="p-4">An arbitrary \`x\` in \`S\` where \`P(x)\` is true.</td><td class="p-4"><code class="tla-code text-sm p-1">CHOOSE x \\in {3,5}:x>4</code> is 5</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                },
+                {
+                    id: 'sequences',
+                    title: '5. Sequences',
+                    description: 'Sequences represent ordered collections. Fundamentally, they are special functions with a domain of `1..n`, making them 1-indexed.',
+                    content: ` <div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-4 font-semibold">Operator</th>
+                                <th class="p-4 font-semibold">Syntax</th>
+                                <th class="p-4 font-semibold">Description</th>
+                                <th class="p-4 font-semibold">Example</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4">Construction</td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&lt;e1, e2&gt;&gt;</code></td><td class="p-4">Creates an ordered sequence.</td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&lt;1, "a", 1&gt;&gt;</code></td></tr>
+                            <tr><td class="p-4">Length</td><td class="p-4"><code class="tla-code text-sm p-1">Len(s)</code></td><td class="p-4">Returns the number of elements.</td><td class="p-4"><code class="tla-code text-sm p-1">Len(&lt;&lt;10,20&gt;&gt;)</code> is 2</td></tr>
+                            <tr><td class="p-4">Head</td><td class="p-4"><code class="tla-code text-sm p-1">Head(s)</code></td><td class="p-4">Returns the first element.</td><td class="p-4"><code class="tla-code text-sm p-1">Head(&lt;&lt;"a","b"&gt;&gt;)</code> is "a"</td></tr>
+                            <tr><td class="p-4">Tail</td><td class="p-4"><code class="tla-code text-sm p-1">Tail(s)</code></td><td class="p-4">Returns the sequence without its first element.</td><td class="p-4"><code class="tla-code text-sm p-1">Tail(&lt;&lt;1,2,3&gt;&gt;)</code> is <code class="tla-code text-sm p-1">&lt;&lt;2,3&gt;&gt;</code></td></tr>
+                            <tr><td class="p-4">Append</td><td class="p-4"><code class="tla-code text-sm p-1">Append(s, e)</code></td><td class="p-4">Adds an element to the end of a sequence.</td><td class="p-4"><code class="tla-code text-sm p-1">Append(&lt;&lt;1&gt;&gt;, 2)</code> is <code class="tla-code text-sm p-1">&lt;&lt;1,2&gt;&gt;</code></td></tr>
+                            <tr><td class="p-4">Concatenation</td><td class="p-4"><code class="tla-code text-sm p-1">s1 \\o s2</code></td><td class="p-4">Concatenates two sequences.</td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&lt;1&gt;&gt; \\o &lt;&lt;2,3&gt;&gt;</code> is <code class="tla-code text-sm p-1">&lt;&lt;1,2,3&gt;&gt;</code></td></tr>
+                            <tr><td class="p-4">Access</td><td class="p-4"><code class="tla-code text-sm p-1">s[i]</code></td><td class="p-4">Accesses the i-th element (1-indexed).</td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&lt;"x","y"&gt;&gt;[2]</code> is "y"</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                },
+                {
+                    id: 'sets-vs-sequences',
+                    title: '6. Sets vs. Sequences',
+                    description: 'Choosing the right data structure is key. Sets are for unordered, unique items, while sequences are for ordered lists where duplicates matter.',
+                    content: ` <div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                           <tr>
+                                <th class="p-4 font-semibold">Feature</th>
+                                <th class="p-4 font-semibold">Sets</th>
+                                <th class="p-4 font-semibold">Sequences</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4 font-medium">Ordering</td><td class="p-4">Unordered</td><td class="p-4">Ordered</td></tr>
+                            <tr><td class="p-4 font-medium">Duplicates</td><td class="p-4">Not allowed (unique)</td><td class="p-4">Allowed</td></tr>
+                            <tr><td class="p-4 font-medium">Indexing</td><td class="p-4">No direct indexing</td><td class="p-4">1-based integer indexing <code class="tla-code text-sm p-1">s[i]</code></td></tr>
+                            <tr><td class="p-4 font-medium">Construction</td><td class="p-4"><code class="tla-code text-sm p-1">{e1, e2}</code></td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&lt;e1, e2&gt;&gt;</code></td></tr>
+                            <tr><td class="p-4 font-medium">Typical Use</td><td class="p-4">Resource pools, state spaces</td><td class="p-4">Queues, logs, buffers</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                },
+                {
+                    id: 'functions',
+                    title: '7. Functions',
+                    description: 'Functions are first-class mappings from a domain set to values. Records and sequences are special cases of functions.',
+                    content: `<div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                     <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                            <tr><th class="p-4 font-semibold">Construct</th><th class="p-4 font-semibold">Syntax</th><th class="p-4 font-semibold">Description</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4">Definition</td><td class="p-4"><code class="tla-code text-sm p-1">[x \\in S |-> expr]</code></td><td class="p-4">Defines a function over domain \`S\`.</td></tr>
+                            <tr><td class="p-4">Application</td><td class="p-4"><code class="tla-code text-sm p-1">f[arg]</code></td><td class="p-4">Applies function \`f\` to \`arg\`.</td></tr>
+                            <tr><td class="p-4">Domain</td><td class="p-4"><code class="tla-code text-sm p-1">DOMAIN f</code></td><td class="p-4">Returns the domain set of function \`f\`.</td></tr>
+                            <tr><td class="p-4">Update</td><td class="p-4"><code class="tla-code text-sm p-1">[f EXCEPT ![key] = val]</code></td><td class="p-4">Creates a new function, with \`key\` mapping to \`val\`.</td></tr>
+                            <tr><td class="p-4">Set of Functions</td><td class="p-4"><code class="tla-code text-sm p-1">[S -> T]</code></td><td class="p-4">The set of all functions from domain \`S\` to co-domain \`T\`.</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                },
+                {
+                    id: 'records',
+                    title: '8. Records',
+                    description: 'Records group data under named fields. They are functions where the domain is a set of strings.',
+                    content: ` <div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                           <tr><th class="p-4 font-semibold">Construct</th><th class="p-4 font-semibold">Syntax</th><th class="p-4 font-semibold">Description</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4">Definition</td><td class="p-4"><code class="tla-code text-sm p-1">[f1 |-> v1, f2 |-> v2]</code></td><td class="p-4">Creates a record with named fields.</td></tr>
+                            <tr><td class="p-4">Field Access</td><td class="p-4"><code class="tla-code text-sm p-1">record.fieldName</code></td><td class="p-4">Accesses the value of a field.</td></tr>
+                            <tr><td class="p-4">Update</td><td class="p-4"><code class="tla-code text-sm p-1">[r EXCEPT !.f1 = newV]</code></td><td class="p-4">Creates a new record with an updated field.</td></tr>
+                            <tr><td class="p-4">Set of Records</td><td class="p-4"><code class="tla-code text-sm p-1">[f1: S1, f2: S2]</code></td><td class="p-4">The set of all records with a given structure.</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                },
+                {
+                    id: 'temporal',
+                    title: '9. Temporal Logic Operators',
+                    description: 'Temporal logic specifies properties across sequences of states (behaviors), such as safety (bad things never happen) and liveness (good things eventually happen).',
+                    content: `<div class="overflow-x-auto bg-white rounded-lg border border-slate-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-4 font-semibold">Operator</th>
+                                <th class="p-4 font-semibold">Syntax</th>
+                                <th class="p-4 font-semibold">Meaning</th>
+                                <th class="p-4 font-semibold">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr><td class="p-4">Prime</td><td class="p-4"><code class="tla-code text-sm p-1">var'</code></td><td class="p-4">Value of \`var\` in the next state.</td><td class="p-4">Action</td></tr>
+                            <tr><td class="p-4">Unchanged</td><td class="p-4"><code class="tla-code text-sm p-1">UNCHANGED var</code></td><td class="p-4">\`var\` has the same value in the next state.</td><td class="p-4">Action</td></tr>
+                            <tr><td class="p-4">Enabled</td><td class="p-4"><code class="tla-code text-sm p-1">ENABLED A</code></td><td class="p-4">True if action \`A\` can occur from the current state.</td><td class="p-4">Predicate</td></tr>
+                            <tr><td class="p-4">Always (Box)</td><td class="p-4"><code class="tla-code text-sm p-1">[]F</code> or <code class="tla-code text-sm p-1">[][F]_vars</code></td><td class="p-4">Formula \`F\` is true for all subsequent states.</td><td class="p-4">Temporal</td></tr>
+                            <tr><td class="p-4">Eventually (Diamond)</td><td class="p-4"><code class="tla-code text-sm p-1">&lt;&gt;F</code></td><td class="p-4">Formula \`F\` is true for some subsequent state.</td><td class="p-4">Temporal</td></tr>
+                            <tr><td class="p-4">Weak Fairness</td><td class="p-4"><code class="tla-code text-sm p-1">WF_vars(A)</code></td><td class="p-4">If \`A\` is persistently enabled, it must eventually occur.</td><td class="p-4">Temporal</td></tr>
+                            <tr><td class="p-4">Strong Fairness</td><td class="p-4"><code class="tla-code text-sm p-1">SF_vars(A)</code></td><td class="p-4">If \`A\` is infinitely often enabled, it must eventually occur.</td><td class="p-4">Temporal</td></tr>
+                            <tr><td class="p-4">Leads To</td><td class="p-4"><code class="tla-code text-sm p-1">F ~> G</code></td><td class="p-4">If \`F\` becomes true, \`G\` will eventually become true.</td><td class="p-4">Temporal</td></tr>
+                        </tbody>
+                    </table>
+                </div>`
+                }
+            ];
+
+            const sectionsContainer = document.getElementById('sections-container');
+
+            sectionsData.forEach(section => {
+                const sectionEl = document.createElement('section');
+                sectionEl.id = section.id;
+                sectionEl.className = 'mb-12 searchable-content';
+
+                const aiAssistantHTML = `
+            <div class="mt-6 p-4 bg-sky-50/50 border border-sky-200 rounded-lg">
+                <h4 class="font-semibold text-slate-800 mb-3">✨ AI Learning Tools</h4>
+                <div class="flex flex-wrap gap-3">
+                    <button class="gemini-btn" data-action="explain" data-topic="${section.title.substring(3)}">Explain Simply</button>
+                    <button class="gemini-btn" data-action="example" data-topic="${section.title.substring(3)}">Generate Use Case</button>
+                </div>
+            </div>`;
+
+                sectionEl.innerHTML = `
+            <h2 class="text-3xl font-semibold text-slate-900 mb-4">${section.title}</h2>
+            <p class="mb-6 text-slate-700">${section.description}</p>
+            <div class="space-y-6">${section.content}</div>
+            ${aiAssistantHTML}
+        `;
+                sectionsContainer.appendChild(sectionEl);
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            const modal = document.getElementById('geminiModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const modalResponse = document.getElementById('modalResponse');
+            const modalResponsePre = modalResponse.querySelector('pre');
+            const translateBtn = document.getElementById('translateBtn');
+            const tlaSnippetTextarea = document.getElementById('tlaSnippet');
+
+            const openModal = () => modal.classList.replace('hidden', 'flex');
+            const closeModal = () => modal.classList.replace('flex', 'hidden');
+
+            const showLoading = (show) => {
+                loadingIndicator.style.display = show ? 'block' : 'none';
+                modalResponse.style.display = show ? 'none' : 'block';
+            };
+
+            const callGeminiAPI = async (prompt) => {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        const errorBody = await response.json();
+                        console.error("API Error Response:", errorBody);
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        return "Sorry, I couldn't generate a response. The model's output was empty.";
+                    }
+                } catch (error) {
+                    console.error('Error calling Gemini API:', error);
+                    return `An error occurred: ${error.message}. Please check the console for details.`;
+                }
+            };
+
+            const handleGeminiRequest = async (action, topic) => {
+                let prompt;
+                if (action === 'explain') {
+                    modalTitle.textContent = `Explaining: ${topic}`;
+                    prompt = `You are an expert computer science professor. Explain the TLA+ concept of "${topic}" in simple, clear terms. Use analogies where helpful, but keep it concise and focused on the core idea for a beginner.`;
+                } else if (action === 'example') {
+                    modalTitle.textContent = `Use Case for: ${topic}`;
+                    prompt = `You are a TLA+ expert. Generate a simple, practical TLA+ code example that demonstrates a common use case for "${topic}". The example should be self-contained and easy to understand. Follow the code with a brief explanation of how it uses the concept.`;
+                } else if (action === 'translate') {
+                    modalTitle.textContent = 'TLA+ Translation';
+                    const snippet = tlaSnippetTextarea.value.trim();
+                    if (!snippet) {
+                        alert("Please paste a TLA+ snippet into the text area first.");
+                        return;
+                    }
+                    prompt = `You are an expert in formal methods. Explain what the following TLA+ code snippet does in plain, easy-to-understand English. Break down the logic step-by-step.\n\nCode:\n\`\`\`tla\n${snippet}\n\`\`\``;
+                }
+
+                openModal();
+                showLoading(true);
+
+                const responseText = await callGeminiAPI(prompt);
+                modalResponsePre.textContent = responseText;
+
+                showLoading(false);
+            };
+
+            document.body.addEventListener('click', (e) => {
+                if (e.target.matches('.gemini-btn')) {
+                    const action = e.target.dataset.action;
+                    const topic = e.target.dataset.topic;
+                    handleGeminiRequest(action, topic);
+                }
+            });
+
+            translateBtn.addEventListener('click', () => handleGeminiRequest('translate'));
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            searchInput.addEventListener('keyup', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const allSearchableContent = document.querySelectorAll('.searchable-content');
+
+                allSearchableContent.forEach(contentSection => {
+                    const contentText = contentSection.textContent.toLowerCase();
+                    if (contentText.includes(searchTerm)) {
+                        contentSection.classList.remove('hidden-content');
+                    } else {
+                        contentSection.classList.add('hidden-content');
+                    }
+                });
+            });
+
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const sections = document.querySelectorAll('main section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('text-sky-600', 'font-bold');
+                            link.classList.add('text-slate-600');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('text-sky-600', 'font-bold');
+                                link.classList.remove('text-slate-600');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+            document.querySelectorAll('#sections-container section').forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+
+</html>
