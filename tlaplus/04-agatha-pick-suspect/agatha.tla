@@ -11,18 +11,17 @@ The butler hates everyone whom Agatha hates.
 No one hates everyone.
 Who killed Agatha?
 *)
-VARIABLES suspects, person, killer
+VARIABLES person, killer
+
+ALL == {"Agatha", "Butler", "Charles"}
 
 PickSuspect ==
-    /\ person' \in suspects
-    /\ UNCHANGED suspects
+    /\ person' \in ALL
     /\ UNCHANGED killer
-
 
 CheckSuspect ==
     /\ person = "Charles"
     /\ killer' = person
-    /\ UNCHANGED suspects
     /\ UNCHANGED person
 
 Init ==
