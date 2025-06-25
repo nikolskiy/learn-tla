@@ -11,27 +11,20 @@ The butler hates everyone whom Agatha hates.
 No one hates everyone.
 Who killed Agatha?
 *)
-VARIABLES person, killer
+VARIABLES killer
 
 ALL == {"Agatha", "Butler", "Charles"}
+ALL2 == {"Charles", "Charles", "Charles"}
 
-PickSuspect ==
-    /\ person' \in ALL
-    /\ UNCHANGED killer
+CheckSuspect(p) ==
+    /\ p = "Charles"
+    /\ killer' = p
 
-CheckSuspect ==
-    /\ person = "Charles"
-    /\ killer' = person
-    /\ UNCHANGED person
-
-Init ==
-    /\ suspects = { "Agatha", "Butler", "Charles" }
-    /\ person = "No one"
-    /\ killer = "No one"
+Init == killer = "No one"
 
 Next ==
-    \/ PickSuspect
-    \/ CheckSuspect
+    \E p \in ALL :
+        CheckSuspect(p)
 
-KillerNotFound == killer = "No one"
+NoKillers == killer = "No one"
 ====

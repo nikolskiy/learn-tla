@@ -12,15 +12,15 @@ No one hates everyone.
 Who killed Agatha?
 *)
 VARIABLES person, killer
-CONSTANTS suspects
+CONSTANTS ALL
 
 \* pick 1
 \* Agatha hates everybody except the butler.
-AgathaHates == {h \in suspects : h # "Butler"}
+AgathaHates == {h \in ALL : h # "Butler"}
 
 \* pick 2
 \* Charles hates no one that Agatha hates.
-CharlesHates == suspects \ AgathaHates
+CharlesHates == ALL \ AgathaHates
 
 \* pick 3
 \* The butler hates everyone whom Agatha hates.
@@ -29,7 +29,7 @@ ButlerHates == AgathaHates
 \* pick 4
 \* The butler hates everyone not richer than Aunt Agatha.
 \* ButlerHates == {h \notin RicherThanAgatha}
-RicherThanAgatha == suspects \ ButlerHates
+RicherThanAgatha == ALL \ ButlerHates
 
 \* TRUE if a hates b
 Hates(a, b) ==
@@ -67,7 +67,7 @@ CheckSuspect ==
     /\ UNCHANGED person
 
 PickSuspect ==
-    /\ person' \in suspects
+    /\ person' \in ALL
     /\ UNCHANGED killer
 
 
@@ -79,16 +79,17 @@ Next ==
     \/ PickSuspect
     \/ CheckSuspect
 
-KillerNotFound == killer = "No one"
+
+NoKillers == killer = "No one"
 
 \* No one hates everyone.
 NoOneHatesEveryone ==
-    ~(\E a \in suspects:
-        \A b \in suspects:
+    ~(\E a \in ALL:
+        \A b \in ALL:
             Hates(a, b)
      )
 
-AgathaDoesntHateButler == Hates("Agatha", "Butler")
+AgathaDoesntHateButler == ~Hates("Agatha", "Butler")
 
 
 ====
