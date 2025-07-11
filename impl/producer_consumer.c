@@ -7,6 +7,17 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdarg.h>
+
+FILE *log_file;
+
+void log_message(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vfprintf(log_file, format, args);
+    va_end(args);
+    fflush(log_file);
+}
 
 uint32_t buff_size, numProducers, numConsumers;
 char (*buffer)[3];
@@ -23,14 +34,14 @@ pthread_mutex_t mutex;
 
 void append(const char* value, uint32_t id) {
 	strcpy(buffer[fillIndex], value);
-	printf("Producer %u put \"%s\" at index %u. New count: %u\n", id, value, fillIndex, count + 1);
+	log_message("Producer %u put %s at index %u. New count: %u", id, value, fillIndex, count + 1);
 	fillIndex = (fillIndex + 1) % buff_size;
 	count++;
 }
 
 void head(uint32_t id) {
 	const char* tmp = buffer[useIndex];
-	printf("Consumer %u took \"%s\" from index %u. New count: %u\n", id, tmp, useIndex, count - 1);
+	log_message("Consumer %u took %s from index %u. New count: %u", id, tmp, useIndex, count - 1);
 	useIndex = (useIndex + 1) % buff_size;
 	count--;
 }
@@ -40,7 +51,7 @@ void *producer (void * arg) {
 	while(1) {
 		pthread_mutex_lock(&mutex);   // acquire the lock
 		while (count == buff_size) {   // check if the buffer is full
-			printf("Producer %u: buffer full, waiting...\n", id); fflush(stdout);
+			log_message("Producer %u: buffer full, waiting...", id);
 		    pthread_cond_wait(&empty, &mutex);
 		}
 
@@ -62,7 +73,7 @@ void *consumer (void * arg) {
 		pthread_mutex_lock(&mutex);   // acquire the lock
 
 		while (count == 0) {           // check if the buffer is empty
-			printf("Consumer %u: buffer empty, waiting...\n", id); fflush(stdout);
+			log_message("Consumer %u: buffer empty, waiting...", id);
 
 			pthread_cond_wait(&full, &mutex); // wait for the buffer to be filled
 		}
@@ -76,8 +87,13 @@ void *consumer (void * arg) {
 }
 
 int main(int argc, char * argv[]) {
+	log_file = fopen("log.txt", "w");
+    if (log_file == NULL) {
+        printf("Error opening log file.");
+        exit(1);
+    }
 	if (argc < 4) {
-		printf ("Usage: ./producer_consumer <buffer_size> <#_of_producers> <#_of_consumers> \n");
+		printf("Usage: ./producer_consumer <buffer_size> <#_of_producers> <#_of_consumers>\n");
 		exit(1);
 	}
 
@@ -88,7 +104,7 @@ int main(int argc, char * argv[]) {
 	numProducers = atoi(argv[2]);
 	numConsumers = atoi(argv[3]);
 
-	printf("Buffer size = %d, # Producers = %d, # Consumers = %d\n", buff_size, numProducers, numConsumers);
+	log_message("Buffer size = %d, # Producers = %d, # Consumers = %d", buff_size, numProducers, numConsumers);
 
 	pthread_mutex_init(&mutex, NULL);
 	pthread_cond_init(&empty, NULL);
@@ -120,5 +136,6 @@ int main(int argc, char * argv[]) {
 	for (i = 0; i < numConsumers; i++)
 		pthread_join(cons[i], NULL);
 
+    fclose(log_file);
 	return 0;
 }
