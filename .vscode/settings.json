@@ -34,5 +34,7 @@
 	"editor.tabSize": 4,
 	"tlaplus.tlc.modelChecker.optionsPrompt": false,
 	"tlaplus.tlc.modelChecker.createOutFiles": false,
-	"tlaplus.tlc.modelChecker.options": "-coverage 1"
+	"tlaplus.tlc.modelChecker.options": "-coverage 1",
+	"IDX.aI.enableInlineCompletion": true,
+	"IDX.aI.enableCodebaseIndexing": true
 }
