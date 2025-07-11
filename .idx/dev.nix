@@ -8,9 +8,8 @@
   packages = [
     # pkgs.go
     pkgs.python312
-    # pkgs.python311Packages.pip
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.nodemon
+    pkgs.gcc
+    pkgs.gnumake
     pkgs.jdk
   ];
 
