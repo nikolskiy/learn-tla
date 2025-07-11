@@ -7,6 +7,7 @@ In that case the goal is not to make them better but to learn by taking things a
 and putting them back together.
 
 # Learning resources
+- [Reference docs](https://apalache-mc.org/docs/lang/index.html)
 - [Video course](https://lamport.azurewebsites.net/video/videos.html) by Leslie Lamport.
 - [Learn TLA](https://www.learntla.com/index.html) through PlusCal.
 - [VSCode TLA+ commands](https://github.com/tlaplus/vscode-tlaplus/wiki/Commands)
