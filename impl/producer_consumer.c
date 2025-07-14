@@ -8,14 +8,22 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdarg.h>
+#include <time.h>
 
 FILE *log_file;
 
 void log_message(const char *format, ...) {
+    time_t now;
+    time(&now);
+    char buf[sizeof "2025-08-08 08:08:08"];
+    strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S", localtime(&now));
+    fprintf(log_file, "[%s] ", buf);
+
     va_list args;
     va_start(args, format);
     vfprintf(log_file, format, args);
     va_end(args);
+    fprintf(log_file, "\n");
     fflush(log_file);
 }
 
@@ -51,7 +59,7 @@ void *producer (void * arg) {
 	while(1) {
 		pthread_mutex_lock(&mutex);   // acquire the lock
 		while (count == buff_size) {   // check if the buffer is full
-			log_message("Producer %u: buffer full, waiting...", id);
+			log_message("Producer %u is waiting because buffer is full.", id);
 		    pthread_cond_wait(&empty, &mutex);
 		}
 
@@ -73,7 +81,7 @@ void *consumer (void * arg) {
 		pthread_mutex_lock(&mutex);   // acquire the lock
 
 		while (count == 0) {           // check if the buffer is empty
-			log_message("Consumer %u: buffer empty, waiting...", id);
+			log_message("Consumer %u is waiting because buffer is empty.", id);
 
 			pthread_cond_wait(&full, &mutex); // wait for the buffer to be filled
 		}
@@ -87,15 +95,17 @@ void *consumer (void * arg) {
 }
 
 int main(int argc, char * argv[]) {
-	log_file = fopen("log.txt", "w");
+	const char log_name[] = "log.txt";
+	log_file = fopen(log_name, "w");
     if (log_file == NULL) {
-        printf("Error opening log file.");
+        printf("Error opening log file %s\n", log_name);
         exit(1);
     }
 	if (argc < 4) {
 		printf("Usage: ./producer_consumer <buffer_size> <#_of_producers> <#_of_consumers>\n");
 		exit(1);
 	}
+    printf("Saving output into %s", log_name);
 
 	srand(999);
 
