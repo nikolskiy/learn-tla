@@ -30,12 +30,25 @@ void log_message(const char *format, ...) {
 }
 
 void *heartbeat_monitor(void *arg) {
+    int dot_counter = 0;
+	printf("\nHeartbeat monitor:\n");
     while (1) {
         time_t current_time;
         time(&current_time);
         if (difftime(current_time, last_log_time) > 60) {
-            printf("Error: No log message for 60 seconds. Stopping everything.\n");
+            printf("\nError: No log message for 60 seconds. Stopping everything.\n");
             exit(1);
+        }
+        if (difftime(current_time, last_log_time) > 1) {
+            printf("-");
+        }
+		else {
+			printf(".");
+		}
+        fflush(stdout);
+        dot_counter++;
+        if (dot_counter % 30 == 0) {
+            printf("\n");
         }
         sleep(1);
     }
@@ -86,7 +99,7 @@ void *producer (void * arg) {
 
 		pthread_cond_signal(&full); // broadcast that the buffer is full
         pthread_mutex_unlock(&mutex); // release the lock
-		usleep(500000); // Sleep for 500ms
+		// usleep(500000); // Sleep for 500ms
 	}
 }
 
@@ -103,7 +116,7 @@ void *consumer (void * arg) {
 		head(id);                       // consume (we don't care about the value)!
 		pthread_cond_signal(&empty); // signal that the buffer is empty
         pthread_mutex_unlock(&mutex); // release the lock
-		usleep(500000); // Sleep for 500ms
+		// usleep(500000); // Sleep for 500ms
 	}
 }
 
