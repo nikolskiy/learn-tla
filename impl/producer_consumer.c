@@ -11,8 +11,10 @@
 #include <time.h>
 
 FILE *log_file;
+time_t last_log_time;
 
 void log_message(const char *format, ...) {
+    time(&last_log_time);
     time_t now;
     time(&now);
     char buf[sizeof "2025-08-08 08:08:08"];
@@ -25,6 +27,19 @@ void log_message(const char *format, ...) {
     vfprintf(log_file, format, args);
     va_end(args);
     fflush(log_file);
+}
+
+void *heartbeat_monitor(void *arg) {
+    while (1) {
+        time_t current_time;
+        time(&current_time);
+        if (difftime(current_time, last_log_time) > 60) {
+            printf("Error: No log message for 60 seconds. Stopping everything.\n");
+            exit(1);
+        }
+        sleep(1);
+    }
+    return NULL;
 }
 
 uint32_t buff_size, numProducers, numConsumers;
@@ -124,6 +139,9 @@ int main(int argc, char * argv[]) {
 	uint32_t producerThreadIds[numProducers];
 	uint32_t consumerThreadIds[numConsumers];
 
+    pthread_t heartbeat_thread;
+    pthread_create(&heartbeat_thread, NULL, heartbeat_monitor, NULL);
+
 	uint32_t i;
 	/* Create the producer */
 	for (i = 0; i < numProducers ; i++) {
@@ -143,6 +161,8 @@ int main(int argc, char * argv[]) {
 
 	for (i = 0; i < numConsumers; i++)
 		pthread_join(cons[i], NULL);
+
+    pthread_join(heartbeat_thread, NULL);
 
     fclose(log_file);
 	return 0;
