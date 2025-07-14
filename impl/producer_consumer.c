@@ -9,13 +9,21 @@
 #include <string.h>
 #include <stdarg.h>
 #include <time.h>
+#include <time.h>
 
 FILE *log_file;
+
+    time_t now;
+    time(&now);
+    char buf[sizeof "2025-08-08 08:08:08"];
+    strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S", localtime(&now));
+    fprintf(log_file, "[%s] ", buf);
 
 void log_message(const char *format, ...) {
     time_t now;
     time(&now);
     char buf[sizeof "2025-08-08 08:08:08"];
+    fprintf(log_file, "\n");
     strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S", localtime(&now));
     fprintf(log_file, "[%s] ", buf);
 
@@ -73,7 +81,7 @@ void *producer (void * arg) {
         pthread_mutex_unlock(&mutex); // release the lock
 		usleep(500000); // Sleep for 500ms
 	}
-}
+			log_message("Consumer %u is waiting because buffer is empty.", id);
 
 void *consumer (void * arg) {
 	uint32_t id = *((uint32_t *) arg);
@@ -87,15 +95,17 @@ void *consumer (void * arg) {
 		}
 
 		head(id);                       // consume (we don't care about the value)!
-
+	const char log_name[] = "log.txt";
+	log_file = fopen(log_name, "w");
 		pthread_cond_signal(&empty); // signal that the buffer is empty
-		pthread_mutex_unlock(&mutex); // release the lock
+        printf("Error opening log file %s\n", log_name);
 		usleep(500000); // Sleep for 500ms
 	}
 }
 
 int main(int argc, char * argv[]) {
 	const char log_name[] = "log.txt";
+    printf("Saving output into %s", log_name);
 	log_file = fopen(log_name, "w");
     if (log_file == NULL) {
         printf("Error opening log file %s\n", log_name);
