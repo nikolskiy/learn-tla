@@ -35,8 +35,8 @@ void *heartbeat_monitor(void *arg) {
     while (1) {
         time_t current_time;
         time(&current_time);
-        if (difftime(current_time, last_log_time) > 60) {
-            printf("\nError: No log message for 60 seconds. Stopping everything.\n");
+        if (difftime(current_time, last_log_time) > 15) {
+            printf("\nError: No log message for 15 seconds. Stopping everything.\n");
             exit(1);
         }
         if (difftime(current_time, last_log_time) > 1) {
@@ -65,7 +65,7 @@ uint32_t useIndex = 0;
 uint32_t count = 0;
 
 // See https://stackoverflow.com/a/2087046/6291195 to relate this to the Java impl.
-pthread_cond_t empty, full;
+pthread_cond_t notify;
 pthread_mutex_t mutex;
 
 void append(const char* value, uint32_t id) {
@@ -88,7 +88,7 @@ void *producer (void * arg) {
 		pthread_mutex_lock(&mutex);   // acquire the lock
 		while (count == buff_size) {  // check if the buffer is full
 			log_message("Producer %u is waiting because the buffer is full.", id);
-		    pthread_cond_wait(&empty, &mutex);
+		    pthread_cond_wait(&notify, &mutex); // wait for changes in the buffer
 		}
 
 		char value[3];
@@ -97,7 +97,7 @@ void *producer (void * arg) {
 		value[2] = '\0';
 		append(value, id);            // produce!
 
-		pthread_cond_signal(&full);   // signal that the buffer is full
+		pthread_cond_signal(&notify); // signal that we updated the buffer
         pthread_mutex_unlock(&mutex); // release the lock
 		// usleep(500000); // Sleep for 500ms
 	}
@@ -110,12 +110,12 @@ void *consumer (void * arg) {
 
 		while (count == 0) {          // check if the buffer is empty
 			log_message("Consumer %u is waiting because the buffer is empty.", id);
-			pthread_cond_wait(&full, &mutex); // wait for the buffer to be filled
+			pthread_cond_wait(&notify, &mutex); // wait for changes in the buffer
 		}
 
-		head(id);                     // consume (we don't care about the value)!
-		pthread_cond_signal(&empty);  // signal that the buffer is empty
-        pthread_mutex_unlock(&mutex); // release the lock
+		head(id);                      // consume (we don't care about the value)!
+		pthread_cond_signal(&notify);  // signal that we updated the buffer
+        pthread_mutex_unlock(&mutex);  // release the lock
 		// usleep(500000); // Sleep for 500ms
 	}
 }
@@ -143,8 +143,7 @@ int main(int argc, char * argv[]) {
 	log_message("Buffer size = %d, # Producers = %d, # Consumers = %d", buff_size, numProducers, numConsumers);
 
 	pthread_mutex_init(&mutex, NULL);
-	pthread_cond_init(&empty, NULL);
-	pthread_cond_init(&full, NULL);
+	pthread_cond_init(&notify, NULL);
 
 	/* Allocate space for the buffer */
 	buffer = malloc(buff_size * sizeof(char[3]));
@@ -175,7 +174,7 @@ int main(int argc, char * argv[]) {
 	for (i = 0; i < numConsumers; i++)
 		pthread_join(cons[i], NULL);
 
-    pthread_join(heartbeat_thread, NULL);
+	pthread_join(heartbeat_thread, NULL);
 
     fclose(log_file);
 	return 0;
