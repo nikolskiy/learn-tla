@@ -1,4 +1,4 @@
----- MODULE agatha ----
+---- MODULE agatha_pick_without_state ----
 (*
 Someone in Dreadsbury Mansion killed Aunt Agatha.
 Agatha, the butler, and Charles live in Dreadsbury Mansion
@@ -14,30 +14,23 @@ Who killed Agatha?
 This is a partial of a solution.
 Here we just practice picking an element and applying some actions to it.
 
+We can pick an element without making an extra action of picking it.
 *)
-VARIABLES
-    person,
-    killer
+VARIABLES killer
 
 ALL == {"Agatha", "Butler", "Charles"}
+ALL2 == {"Charles", "Charles", "Charles"}
 
-PickSuspect ==
-    /\ person' \in ALL
-    /\ UNCHANGED killer
+CheckSuspect(p) ==
+    /\ p = "Charles"
+    /\ killer' = p
 
-CheckSuspect ==
-    /\ person = "Charles"
-    /\ killer' = person
-    /\ UNCHANGED person
-
-Init ==
-    /\ killer = "No one"
-    /\ person = "No one"
+Init == killer = "No one"
 
 Next ==
-    \/ PickSuspect
-    \/ CheckSuspect
+    \* \A p \in ALL:
+    \E p \in ALL:
+        CheckSuspect(p)
 
-\* Invariant
 NoKillers == killer = "No one"
 ====

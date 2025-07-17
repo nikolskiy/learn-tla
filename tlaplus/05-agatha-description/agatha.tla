@@ -32,7 +32,7 @@ ButlerHates == AgathaHates
 RicherThanAgatha == ALL \ ButlerHates
 
 \* TRUE if a hates b
-Hates(a, b) ==
+Hates2(a, b) ==
     (*
     Allow local definitions of operators or values within an expression.
     *)
@@ -54,6 +54,16 @@ Hates(a, b) ==
         /\ a \in DOMAIN hate
         /\ b \in hate[a]
 
+\* TRUE if a hates b
+Hates(a, b) ==
+    /\ a \in ALL
+    \* Records in TLA+ are used to group related data under named fields.
+    /\ b \in [
+                Agatha |-> AgathaHates,
+                Charles |-> CharlesHates,
+                Butler |-> ButlerHates
+             ][a]
+
 FitsDescription(p) ==
     \* A killer always hates
     /\ Hates(p, "Agatha")
@@ -69,7 +79,6 @@ CheckSuspect ==
 PickSuspect ==
     /\ person' \in ALL
     /\ UNCHANGED killer
-
 
 Init ==
     /\ person = "No one"
@@ -90,6 +99,5 @@ NoOneHatesEveryone ==
      )
 
 AgathaDoesntHateButler == ~Hates("Agatha", "Butler")
-
 
 ====
