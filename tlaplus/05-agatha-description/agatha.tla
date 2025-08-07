@@ -1,14 +1,20 @@
 ---- MODULE agatha ----
 (*
 Someone in Dreadsbury Mansion killed Aunt Agatha.
-Agatha, the butler, and Charles live in Dreadsbury Mansion
+
+Agatha, Butler, and Charles
+live in Dreadsbury Mansion
 and are the only ones to live there.
-A killer always hates, and is no richer than his victim.
+
+A killer always hates,
+     and is no richer than his victim.
+
 Charles hates no one that Agatha hates.
 Agatha hates everybody except the butler.
 The butler hates everyone not richer than Aunt Agatha.
 The butler hates everyone whom Agatha hates.
 No one hates everyone.
+
 Who killed Agatha?
 *)
 VARIABLES person, killer
@@ -17,6 +23,7 @@ CONSTANTS ALL
 \* pick 1
 \* Agatha hates everybody except the butler.
 AgathaHates == {h \in ALL : h # "Butler"}
+Test == {h: h \in ALL}
 
 \* pick 2
 \* Charles hates no one that Agatha hates.
@@ -24,11 +31,12 @@ CharlesHates == ALL \ AgathaHates
 
 \* pick 3
 \* The butler hates everyone whom Agatha hates.
+\* Test == {p \in AgathaHates}
 ButlerHates == AgathaHates
 
 \* pick 4
 \* The butler hates everyone not richer than Aunt Agatha.
-\* ButlerHates == {h \notin RicherThanAgatha}
+\*ButlerHates == {p \in ALL: p \notin CharlesHates}
 RicherThanAgatha == ALL \ ButlerHates
 
 \* TRUE if a hates b
@@ -91,13 +99,14 @@ Next ==
 
 NoKillers == killer = "No one"
 
-\* No one hates everyone.
-NoOneHatesEveryone ==
+
+ASSUME
+    AgathaDoesntHateButler == ~Hates("Agatha", "Butler")
+    \* No one hates everyone.
+    NoOneHatesEveryone ==
     ~(\E a \in ALL:
         \A b \in ALL:
             Hates(a, b)
      )
-
-AgathaDoesntHateButler == ~Hates("Agatha", "Butler")
 
 ====

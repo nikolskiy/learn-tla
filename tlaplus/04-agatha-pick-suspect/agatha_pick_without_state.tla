@@ -1,14 +1,18 @@
 ---- MODULE agatha_pick_without_state ----
 (*
 Someone in Dreadsbury Mansion killed Aunt Agatha.
-Agatha, the butler, and Charles live in Dreadsbury Mansion
-and are the only ones to live there.
+
+Agatha, the Butler, and Charles
+live in Dreadsbury Mansion and are
+the only ones to live there.
+
 A killer always hates, and is no richer than his victim.
 Charles hates no one that Agatha hates.
 Agatha hates everybody except the butler.
 The butler hates everyone not richer than Aunt Agatha.
 The butler hates everyone whom Agatha hates.
 No one hates everyone.
+
 Who killed Agatha?
 
 This is a partial of a solution.
@@ -18,7 +22,10 @@ We can pick an element without making an extra action of picking it.
 *)
 VARIABLES killer
 
-ALL == {"Agatha", "Butler", "Charles"}
+ALL == "Agatha" /\ "Butler" /\ "Charles"
+ALL1 == {"Agatha", "Butler", "Charles"}
+
+\* Test "for all" \A
 ALL2 == {"Charles", "Charles", "Charles"}
 
 CheckSuspect(p) ==
@@ -29,7 +36,7 @@ Init == killer = "No one"
 
 Next ==
     \* \A p \in ALL:
-    \E p \in ALL:
+    \E p \in ALL1:
         CheckSuspect(p)
 
 NoKillers == killer = "No one"
