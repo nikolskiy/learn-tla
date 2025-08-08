@@ -23,7 +23,6 @@ CONSTANTS ALL
 \* pick 1
 \* Agatha hates everybody except the butler.
 AgathaHates == {h \in ALL : h # "Butler"}
-Test == {h: h \in ALL}
 
 \* pick 2
 \* Charles hates no one that Agatha hates.

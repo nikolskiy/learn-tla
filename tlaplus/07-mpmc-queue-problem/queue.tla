@@ -14,7 +14,7 @@ VARIABLES
 Count == Len(buffer)
 
 Wait(t) ==
-    /\ wait_set' = wait_set \cup {t}
+    /\ wait_set' = wait_set \union {t}
     /\ UNCHANGED buffer
 
 Notify ==

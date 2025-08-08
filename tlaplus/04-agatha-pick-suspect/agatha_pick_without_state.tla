@@ -22,8 +22,7 @@ We can pick an element without making an extra action of picking it.
 *)
 VARIABLES killer
 
-ALL == "Agatha" /\ "Butler" /\ "Charles"
-ALL1 == {"Agatha", "Butler", "Charles"}
+ALL == {"Agatha", "Butler", "Charles"}
 
 \* Test "for all" \A
 ALL2 == {"Charles", "Charles", "Charles"}
@@ -36,7 +35,7 @@ Init == killer = "No one"
 
 Next ==
     \* \A p \in ALL:
-    \E p \in ALL1:
+    \E p \in ALL:
         CheckSuspect(p)
 
 NoKillers == killer = "No one"
